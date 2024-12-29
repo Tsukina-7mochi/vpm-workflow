@@ -1,0 +1,62 @@
+{
+  "name": "VPM Workflow",
+  "id": "net.ts7m.vpm-workflow",
+  "url": "https://raw.githubusercontent.com/Tsukina-7mochi/vpm-workflow/main/vpm.json",
+  "author": "Tsukina-7mochi",
+  "packages": {
+    "net.ts7m.vpm-workflow.package1": {
+      "0.1.0": {
+        "name": "net.ts7m.vpm-workflow.package1",
+        "displayName": "Example Package 1",
+        "version": "0.1.0",
+        "author": {
+          "name": "Mooncake Sugar",
+          "email": "Tsukina7mochi@gmail.com"
+        },
+        "unity": "2022.3",
+        "description": "Example Package",
+        "license": "MIT",
+        "vpmDependencies": {
+          "com.vrchat.worlds": ">=3.5.0"
+        },
+        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/package1-v0.1.0/net.ts7m.vpm-workflow.package1.v0.1.0.zip"
+      }
+    },
+    "net.ts7m.vpm-workflow.package2": {
+      "0.1.0": {
+        "name": "net.ts7m.vpm-workflow.package2",
+        "displayName": "Example Package 2",
+        "version": "0.1.0",
+        "author": {
+          "name": "Mooncake Sugar",
+          "email": "Tsukina7mochi@gmail.com"
+        },
+        "unity": "2022.3",
+        "description": "Example Package",
+        "license": "MIT",
+        "vpmDependencies": {
+          "com.vrchat.worlds": ">=3.5.0"
+        },
+        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/package2-v0.1.0/net.ts7m.vpm-workflow.package2.v0.1.0.zip"
+      }
+    },
+    "net.ts7m.vpm-workflow.package3": {
+      "0.1.0": {
+        "name": "net.ts7m.vpm-workflow.package3",
+        "displayName": "Example Package 3",
+        "version": "0.1.0",
+        "author": {
+          "name": "Mooncake Sugar",
+          "email": "Tsukina7mochi@gmail.com"
+        },
+        "unity": "2022.3",
+        "description": "Example Package",
+        "license": "MIT",
+        "vpmDependencies": {
+          "com.vrchat.worlds": ">=3.5.0"
+        },
+        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/package3-v0.1.0/net.ts7m.vpm-workflow.package3.v0.1.0.zip"
+      }
+    }
+  }
+}
