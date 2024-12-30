@@ -1,0 +1,30 @@
+name: Validate Manifest Files
+
+on:
+  push:
+
+jobs:
+  validate-manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    strategy:
+      matrix:
+        path:
+          - Assets/Package1
+          - Assets/Package2
+          - Packages/Package3
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.path }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/validate-package-manifest
+        with:
+          working-directory: ${{ matrix.path }}
+          url-pattern: "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/{name}-v{version}/{name}.v{version}.zip"

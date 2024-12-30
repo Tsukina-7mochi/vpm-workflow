@@ -1,0 +1,94 @@
+name: Validate Manifest Files
+description: Validates manifest version and download url
+
+inputs:
+  working-directory:
+    required: false
+    type: string
+  version:
+    required: false
+    type: string
+  url-pattern:
+    required: false
+    type: string
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup
+      run: |
+        echo "manifest-file=./${{ inputs.working-directory }}/package.json" >> $GITHUB_ENV
+
+    - name: Parse manifest file
+      run: |
+        echo "Manifest: ${{ env.manifest-file }}"
+
+        EXPECTED_VERSION="$(echo "${{ inputs.version }}" | sed -e 's/^v//')"
+
+        echo "expected-version=$EXPECTED_VERSION" >> $GITHUB_ENV
+
+        PKG_NAME="$(cat "${{ env.manifest-file }}" | jq -r '.name')"
+        PKG_DISPLAY_NAME="$(cat "${{ env.manifest-file }}" | jq -r '.displayName')"
+        PKG_VERSION="$(cat "${{ env.manifest-file }}" | jq -r '.version')"
+
+        echo "pkg-name=$PKG_NAME" >> $GITHUB_ENV
+        echo "pkg-display-name=$PKG_DISPLAY_NAME" >> $GITHUB_ENV
+        echo "pkg-version=$PKG_VERSION" >> $GITHUB_ENV
+        echo "pkg-url=$(cat "${{ env.manifest-file }}" | jq -r '.url')" >> $GITHUB_ENV
+        echo "pkg-author-name=$(cat "${{ env.manifest-file }}" | jq -r '.author.name')" >> $GITHUB_ENV
+        echo "pkg-author-email=$(cat "${{ env.manifest-file }}" | jq -r '.author.email')" >> $GITHUB_ENV
+
+        URL_VERSION=${EXPECTED_VERSION:-$PKG_VERSION}
+        echo "pkg-name: $PKG_NAME"
+        EXPECTED_URL="${{ inputs.url-pattern }}"
+        EXPECTED_URL="$(echo "$EXPECTED_URL" | sed -e "s/{name}/$PKG_NAME/g")"
+        EXPECTED_URL="$(echo "$EXPECTED_URL" | sed -e "s/{display-name}/$PKG_DISPLAY_NAME/g")"
+        EXPECTED_URL="$(echo "$EXPECTED_URL" | sed -e "s/{version}/$URL_VERSION/g")"
+        echo "expected-url=$EXPECTED_URL" >> $GITHUB_ENV
+
+    - if: ${{ env.pkg-name == '' }}
+      run: core.setFailed('Missing "name" field')
+
+    - if: ${{ env.pkg-display-name == '' }}
+      run: core.setFailed('Missing "displayName" field')
+
+    - if: ${{ env.pkg-version == '' }}
+      run: core.setFailed('Missing "version" field')
+
+    - if: ${{ env.pkg-url == '' }}
+      run: core.setFailed('Missing "url" field')
+
+    - if: ${{ env.pkg-author-name == '' }}
+      run: core.setFailed('Missing "author.name" field')
+
+    - if: ${{ env.pkg-author-email == '' }}
+      run: core.setFailed('Missing "author.email" field')
+
+    - run: |
+        echo "Checking ${{ env.pkg-name }}"
+    
+    - name: Check version
+      id: version-check
+      if: ${{ env.expected-version }}
+      run: |
+        echo "Expected: ${{ env.expected-version }}"
+        echo "Actual  : ${{ env.pkg-version }}"
+        [ "${{ env.pkg-version }}" = "${{ env.expected-version }}" ] || echo "failed=1" >> $GITHUB_OUTPUT
+
+    - name: Check URL
+      id: url-check
+      run: |
+        echo "Expected: ${{ env.expected-url }}"
+        echo "Actual  : ${{ env.pkg-url }}"
+        [ "${{ env.pkg-url }}" = "${{ env.expected-url }}" ] || echo "failed=1" >> $GITHUB_OUTPUT
+
+    - name: Version check failed
+      if: ${{ always() && steps.version-check.outputs.failed }}
+      run: |
+        core.setFailed("Manifest version incorrect: expected ${{ env.expected-version }} but got ${{ env.pkg-version }}")
+
+    - name: URL check failed
+      if: ${{ always() && steps.url-check.outputs.failed }}
+      run: |
+        core.setFailed("Manifest URL incorrect: expected ${{ env.expected-url }} but got ${{ env.pkg-url }}")
