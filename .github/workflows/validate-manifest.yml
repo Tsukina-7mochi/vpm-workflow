@@ -17,6 +17,7 @@ jobs:
         with:
           filename: "vpm.json"
 
+
   validate-packages:
     runs-on: ubuntu-latest
     timeout-minutes: 1
@@ -40,5 +41,5 @@ jobs:
 
       - uses: ./.github/actions/check-repository-includes-package
         with:
-          repository: "vpm.json"
-          package: "${{ matrix.path }}/package.json"
+          repository-filename: "vpm.json"
+          package-filename: "${{ matrix.path }}/package.json"
