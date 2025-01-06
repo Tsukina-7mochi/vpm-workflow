@@ -1,0 +1,39 @@
+name: Check Repository Includes Package
+description: Checks VPM repository manifest includes certain package
+
+inputs:
+  repository:
+    required: true
+    type: string
+  package:
+    required: true
+    type: string
+
+runs:
+  using: composite
+
+  steps:
+    - name: Parse package manifest
+      run: |
+        PKG_NAME="$(cat "${{ inputs.package }}" | jq -rM ".name")"
+        PKG_VERSION="$(cat "${{ inputs.package }}" | jq -rM ".version")"
+
+        echo "Package name   : $PKG_NAME"
+        echo "Package version: $PKG_VERSION"
+
+        echo "pkg-name=$PKG_NAME" >> $GITHUB_ENV
+        echo "pkg-version=$PKG_VERSION" >> $GITHUB_ENV
+
+    - name: Check repository includes package
+      run: |
+        QUERY=".packages.\"${{ env.pkg-name }}\".\"${{ env.pkg-version }}\""
+        EXPECTED="$(cat "${{ inputs.package }}" | jq -cM ".")"
+        ACTUAL="$(cat "${{ inputs.repository }}" | jq -cM "$QUERY")"
+        echo "$ACTUAL"
+        echo "$EXPECTED"
+
+        [ "$ACTUAL" = "$EXPECTED" ] && exit 0
+        core.setFailed("Package manifest does not match to the one in the repository manifest.")
+
+    - run: |
+        echo "Validation existence of ${{ env.pkg-name }}:${{ env.pkg-version }}: ok" 

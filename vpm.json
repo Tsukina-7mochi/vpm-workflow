@@ -19,7 +19,7 @@
         "vpmDependencies": {
           "com.vrchat.worlds": ">=3.5.0"
         },
-        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/package1-v0.1.0/net.ts7m.vpm-workflow.package1.v0.1.0.zip"
+        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/net.ts7m.vpm-workflow.package1-v0.1.0/net.ts7m.vpm-workflow.package1.v0.1.0.zip"
       }
     },
     "net.ts7m.vpm-workflow.package2": {
@@ -37,7 +37,7 @@
         "vpmDependencies": {
           "com.vrchat.worlds": ">=3.5.0"
         },
-        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/package2-v0.1.0/net.ts7m.vpm-workflow.package2.v0.1.0.zip"
+        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/net.ts7m.vpm-workflow.package2-v0.1.0/net.ts7m.vpm-workflow.package2.v0.1.0.zip"
       }
     },
     "net.ts7m.vpm-workflow.package3": {
@@ -55,7 +55,7 @@
         "vpmDependencies": {
           "com.vrchat.worlds": ">=3.5.0"
         },
-        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/package3-v0.1.0/net.ts7m.vpm-workflow.package3.v0.1.0.zip"
+        "url": "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/net.ts7m.vpm-workflow.package3-v0.1.0/net.ts7m.vpm-workflow.package3.v0.1.0.zip"
       }
     }
   }

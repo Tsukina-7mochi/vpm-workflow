@@ -15,10 +15,6 @@ jobs:
           - Assets/Package2
           - Packages/Package3
 
-    defaults:
-      run:
-        working-directory: ${{ matrix.path }}
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,3 +24,9 @@ jobs:
         with:
           working-directory: ${{ matrix.path }}
           url-pattern: "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/{name}-v{version}/{name}.v{version}.zip"
+
+      - uses: ./.github/actions/check-repository-includes-package
+        with:
+          repository: "vpm.json"
+          package: "${{ matrix.path }}/package.json"
+
