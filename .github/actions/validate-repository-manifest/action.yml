@@ -117,3 +117,7 @@ runs:
         done
 
         exit $FAILED
+
+    - shell: bash
+      run: |
+        echo "Validation ${{ env.filename }}: ok" 
