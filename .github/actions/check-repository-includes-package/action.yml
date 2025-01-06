@@ -1,5 +1,5 @@
 name: Check Repository Includes Package
-description: Checks VPM repository manifest includes certain package
+description: Checks VPM repository manifest includes certain package.
 
 inputs:
   repository:

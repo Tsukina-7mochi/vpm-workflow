@@ -1,5 +1,5 @@
 name: Validate Package Manifest 
-description: |
+description: >
   Checks if the package manifest contains the required fields,
   is the specified version, and the URL matches the specified pattern.
 
