@@ -54,22 +54,34 @@ runs:
         echo "expected-url=$EXPECTED_URL" >> $GITHUB_ENV
 
     - if: ${{ env.pkg-name-type != 'string' }}
-      run: core.setFailed('"name" must be string, not ${{ env.pkg-name-type }}')
+      run: |
+        echo '::error::"name" must be string, not ${{ env.pkg-name-type }}'
+        exit 1
 
     - if: ${{ env.pkg-display-name-type != 'string' }}
-      run: core.setFailed('"displayName" must be string, not ${{ env.pkg-display-name-type }}')
+      run: |
+        echo '::error::"displayName" must be string, not ${{ env.pkg-display-name-type }}'
+        exit 1
 
     - if: ${{ env.pkg-version-type != 'string' }}
-      run: core.setFailed('"version" must be string, not ${{ env.pkg-version-type }}')
+      run: |
+        echo '::error::"version" must be string, not ${{ env.pkg-version-type }}'
+        exit 1
 
     - if: ${{ env.pkg-url-type != 'string' }}
-      run: core.setFailed('"url" must be string, not ${{ env.pkg-url-type }}')
+      run: |
+        echo '::error::"url" must be string, not ${{ env.pkg-url-type }}'
+        exit 1
 
     - if: ${{ env.pkg-author-name-type != 'string' }}
-      run: core.setFailed('"author.name" must be string, not ${{ env.pkg-author-name-type }}')
+      run: |
+        echo '::error::"author.name" must be string, not ${{ env.pkg-author-name-type }}'
+        exit 1
 
     - if: ${{ env.pkg-author-email-type != 'string' }}
-      run: core.setFailed('"author.email" must be string, not ${{ env.pkg-author-email-type }}')
+      run: |
+        echo '::error::"author.email" must be string, not ${{ env.pkg-author-email-type }}'
+        exit 1
           
     - name: Check version
       id: version-check
@@ -89,12 +101,14 @@ runs:
     - name: Version check failed
       if: ${{ always() && steps.version-check.outputs.failed }}
       run: |
-        core.setFailed("Manifest version incorrect: expected ${{ env.expected-version }} but got ${{ env.pkg-version }}")
+        echo "::error::Manifest version incorrect: expected ${{ env.expected-version }} but got ${{ env.pkg-version }}"
+        exit 1
 
     - name: URL check failed
       if: ${{ always() && steps.url-check.outputs.failed }}
       run: |
-        core.setFailed("Manifest URL incorrect: expected ${{ env.expected-url }} but got ${{ env.pkg-url }}")
+        echo "::error::Manifest URL incorrect: expected ${{ env.expected-url }} but got ${{ env.pkg-url }}"
+        exit 1
 
     - run: |
         echo "Validation ${{ env.manifest-file }}: ok" 

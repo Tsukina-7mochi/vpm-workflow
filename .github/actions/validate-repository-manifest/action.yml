@@ -28,24 +28,33 @@ runs:
         echo "packages-type=$PACKAGES_TYPE" >> $GITHUB_ENV
 
     - if: ${{ env.name-type != 'string' }}
-      run: core.setFailed('"name" must be string, not ${{ env.name-type }}')
+      run: |
+        echo '::error::"name" must be string, not ${{ env.name-type }}'
+        exit 1
 
     - if: ${{ env.author-type != 'string' }}
-      run: core.setFailed('"author" must be string, not ${{ env.author-type }}')
+      run: |
+        echo '::error::"author" must be string, not ${{ env.author-type }}'
+        exit 1
 
     - if: ${{ env.id-type != 'string' }}
-      run: core.setFailed('"id" must be string, not ${{ env.id-type }}')
+      run: |
+        echo '::error::"id" must be string, not ${{ env.id-type }}'
+        exit 1
 
     - if: ${{ env.url-type != 'string' }}
-      run: core.setFailed('"url" must be string, not ${{ env.url-type }}')
+      run: |
+        echo '::error::"url" must be string, not ${{ env.url-type }}'
+        exit 1
 
     - if: ${{ env.packages-type != 'object' }}
-      run: core.setFailed('"packages" must be object, not ${{ env.packages-type }}')
+      run: |
+        echo '::error::"packages" must be object, not ${{ env.packages-type }}'
+        exit 1
 
     - name: Check package manifests
       run: |
         MANIFEST="$(cat ${{ inputs.filename }} | jq -cM ".")"
-        ERROR="::error file=${{ inputs.filename }}"
         FAILED=0
 
         # iterate over ".packages" object
@@ -55,7 +64,7 @@ runs:
             PKGSET_TYPE="$(echo "$MANIFEST" | jq -r "$PKGSET_QUERY | type")"
 
             if [ "$PKGSET_TYPE" != "object" ]; then
-                echo "$ERROR::package listing $PKG_NAME must be object, not $PKGSET_TYPE"
+        echo "::error::package listing $PKG_NAME must be object, not $PKGSET_TYPE"
                 FAILED=1
             fi
 
@@ -74,27 +83,27 @@ runs:
                 PKG_AUTHOR_EMAIL_TYPE="$(echo "$PKG_MANIFEST" | jq -r ".author.email | type")"
 
                 if [ "$PKG_NAME_INNER" != "$PKG_NAME" ]; then
-                    echo "$ERROR::package name mismatch in $PKG_NAME@$PKG_VERSION"
+                    echo "::error::package name mismatch in $PKG_NAME@$PKG_VERSION"
                     FAILED=1
                 fi
                 if [ "$PKG_DISPLAY_NAME_TYPE" != "string" ]; then
-                    echo "$ERROR::package displayName must be string, not $PKG_DISPLAY_NAME_TYPE in $PKG_NAME@$PKG_VERSION"
+                    echo "::error::package displayName must be string, not $PKG_DISPLAY_NAME_TYPE in $PKG_NAME@$PKG_VERSION"
                     FAILED=1
                 fi
                 if [ "$PKG_VERSION_INNER" != "$PKG_VERSION" ]; then
-                    echo "$ERROR::package version mismatch in $PKG_NAME@$PKG_VERSION"
+                    echo "::error::package version mismatch in $PKG_NAME@$PKG_VERSION"
                     FAILED=1
                 fi
                 if [ "$PKG_URL_TYPE" != "string" ]; then
-                    echo "$ERROR::package url must be string, not $PKG_URL_TYPE in $PKG_NAME@$PKG_VERSION"
+                    echo "::error::package url must be string, not $PKG_URL_TYPE in $PKG_NAME@$PKG_VERSION"
                     FAILED=1
                 fi
                 if [ "$PKG_AUTHOR_NAME_TYPE" != "string" ]; then
-                    echo "$ERROR::package author name must be string, not $PKG_AUTHOR_NAME_TYPE in $PKG_NAME@$PKG_VERSION"
+                    echo "::error::package author name must be string, not $PKG_AUTHOR_NAME_TYPE in $PKG_NAME@$PKG_VERSION"
                     FAILED=1
                 fi
                 if [ "$PKG_AUTHOR_EMAIL_TYPE" != "string" ]; then
-                    echo "$ERROR::package author email must be string, not $PKG_AUTHOR_EMAIL_TYPE in $PKG_NAME@$PKG_VERSION"
+                    echo "::error::package author email must be string, not $PKG_AUTHOR_EMAIL_TYPE in $PKG_NAME@$PKG_VERSION"
                     FAILED=1
                 fi
             done

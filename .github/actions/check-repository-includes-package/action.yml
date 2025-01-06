@@ -32,8 +32,10 @@ runs:
         echo "$ACTUAL"
         echo "$EXPECTED"
 
-        [ "$ACTUAL" = "$EXPECTED" ] && exit 0
-        core.setFailed("Package manifest does not match to the one in the repository manifest.")
+        if [ "$ACTUAL" != "$EXPECTED" ]; then
+          echo "::error::Package manifest does not match to the one in the repository manifest."
+          exit 1
+        fi
 
     - run: |
         echo "Validation existence of ${{ env.pkg-name }}:${{ env.pkg-version }}: ok" 
