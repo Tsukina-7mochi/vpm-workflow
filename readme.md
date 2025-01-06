@@ -15,7 +15,7 @@ Specify pattern as `url-pattern` to check if the url string matches the pattern.
 You can use `name`, `displayName`, `version` as placeholders.
 
 ```yaml
-- uses: ./.github/actions/validate-package-manifest
+- uses: Tsukina-7mochi/vpm-workflow/.github/actions/validate-package-manifest
   with:
     version: ${{ github.ref_name }}
     filename: Assets/MyPacakge/package.json
@@ -30,7 +30,7 @@ Checks that repository manifest (`vpm.json` in this repository) has the [specifi
 This action assumes that multiple packages are managed in a monorepo and that the repository manifest is served statically.
 
 ```yaml
-- uses: ./.github/actions/validate-repository-manifest
+- uses: Tsukina-7mochi/vpm-workflow/.github/actions/validate-repository-manifest
   with:
     filename: "vpm.json"
 ```
@@ -42,7 +42,7 @@ This action assumes that multiple packages are managed in a monorepo and that th
 Checks if a package manifest is included in the repository manifest as the `packages.{pacakge name}.{version}`.
 
 ```yaml
-- uses: ./.github/actions/check-repository-includes-package
+- uses: Tsukina-7mochi/vpm-workflow/.github/actions/check-repository-includes-package
   with:
     repository-filename: "vpm.json"
     package-filename: "Assets/MyPackage/pacakge.json"
