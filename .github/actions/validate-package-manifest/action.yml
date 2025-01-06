@@ -4,8 +4,8 @@ description: |
   is the specified version, and the URL matches the specified pattern.
 
 inputs:
-  working-directory:
-    required: false
+  filename:
+    required: true
     type: string
   version:
     required: false
@@ -18,58 +18,59 @@ runs:
   using: composite
 
   steps:
-    - name: Setup
-      run: |
-        echo "manifest-file=./${{ inputs.working-directory }}/package.json" >> $GITHUB_ENV
-
     - name: Parse manifest file
       run: |
-        echo "Manifest: ${{ env.manifest-file }}"
+        echo "Manifest: ${{ inputs.filename }}"
+        MANIFEST="$(cat ${{ inputs.filename }})"
 
         EXPECTED_VERSION="$(echo "${{ inputs.version }}" | sed -e 's/^v//')"
-
         echo "expected-version=$EXPECTED_VERSION" >> $GITHUB_ENV
 
-        PKG_NAME="$(cat "${{ env.manifest-file }}" | jq -r '.name')"
-        PKG_DISPLAY_NAME="$(cat "${{ env.manifest-file }}" | jq -r '.displayName')"
-        PKG_VERSION="$(cat "${{ env.manifest-file }}" | jq -r '.version')"
+        PKG_NAME="$(echo "$MANIFEST" | jq -r '.name')"
+        PKG_NAME_TYPE="$(echo "$MANIFEST" | jq -r '.name | type')"
+        PKG_DISPLAY_NAME_TYPE="$(echo "$MANIFEST" | jq -r '.displayName | type')"
+        PKG_VERSION="$(echo "$MANIFEST" | jq -r '.version')"
+        PKG_VERSION_TYPE="$(echo "$MANIFEST" | jq -r '.version | type')"
+        PKG_URL="$(echo "$MANIFEST" | jq -r '.url')"
+        PKG_URL_TYPE="$(echo "$MANIFEST" | jq -r '.url | type')"
+        PKG_AUTHOR_NAME_TYPE="$(echo "$MANIFEST" | jq -r '.author.name | type')"
+        PKG_AUTHOR_EMAIL_TYPE="$(echo "$MANIFEST" | jq -r '.author.email | type')"
 
-        echo "pkg-name=$PKG_NAME" >> $GITHUB_ENV
-        echo "pkg-display-name=$PKG_DISPLAY_NAME" >> $GITHUB_ENV
+        echo "pkg-name-type=$PKG_NAME_TYPE" >> $GITHUB_ENV
+        echo "pkg-display-name-type=$PKG_DISPLAY_NAME_TYPE" >> $GITHUB_ENV
         echo "pkg-version=$PKG_VERSION" >> $GITHUB_ENV
-        echo "pkg-url=$(cat "${{ env.manifest-file }}" | jq -r '.url')" >> $GITHUB_ENV
-        echo "pkg-author-name=$(cat "${{ env.manifest-file }}" | jq -r '.author.name')" >> $GITHUB_ENV
-        echo "pkg-author-email=$(cat "${{ env.manifest-file }}" | jq -r '.author.email')" >> $GITHUB_ENV
+        echo "pkg-version-type=$PKG_VERSION_TYPE" >> $GITHUB_ENV
+        echo "pkg-url=$PKG_URL" >> $GITHUB_ENV
+        echo "pkg-url-type=$PKG_URL_TYPE" >> $GITHUB_ENV
+        echo "pkg-author-name-type=$PKG_AUTHOR_NAME_TYPE" >> $GITHUB_ENV
+        echo "pkg-author-email-type=$PKG_AUTHOR_EMAIL_TYPE" >> $GITHUB_ENV
 
         URL_VERSION=${EXPECTED_VERSION:-$PKG_VERSION}
-        echo "pkg-name: $PKG_NAME"
+        echo "Checking $PKG_NAME"
         EXPECTED_URL="${{ inputs.url-pattern }}"
         EXPECTED_URL="$(echo "$EXPECTED_URL" | sed -e "s/{name}/$PKG_NAME/g")"
         EXPECTED_URL="$(echo "$EXPECTED_URL" | sed -e "s/{display-name}/$PKG_DISPLAY_NAME/g")"
         EXPECTED_URL="$(echo "$EXPECTED_URL" | sed -e "s/{version}/$URL_VERSION/g")"
         echo "expected-url=$EXPECTED_URL" >> $GITHUB_ENV
 
-    - if: ${{ env.pkg-name == '' }}
-      run: core.setFailed('Missing "name" field')
+    - if: ${{ env.pkg-name-type != 'string' }}
+      run: core.setFailed('"name" must be string, not ${{ env.pkg-name-type }}')
 
-    - if: ${{ env.pkg-display-name == '' }}
-      run: core.setFailed('Missing "displayName" field')
+    - if: ${{ env.pkg-display-name-type != 'string' }}
+      run: core.setFailed('"displayName" must be string, not ${{ env.pkg-display-name-type }}')
 
-    - if: ${{ env.pkg-version == '' }}
-      run: core.setFailed('Missing "version" field')
+    - if: ${{ env.pkg-version-type != 'string' }}
+      run: core.setFailed('"version" must be string, not ${{ env.pkg-version-type }}')
 
-    - if: ${{ env.pkg-url == '' }}
-      run: core.setFailed('Missing "url" field')
+    - if: ${{ env.pkg-url-type != 'string' }}
+      run: core.setFailed('"url" must be string, not ${{ env.pkg-url-type }}')
 
-    - if: ${{ env.pkg-author-name == '' }}
-      run: core.setFailed('Missing "author.name" field')
+    - if: ${{ env.pkg-author-name-type != 'string' }}
+      run: core.setFailed('"author.name" must be string, not ${{ env.pkg-author-name-type }}')
 
-    - if: ${{ env.pkg-author-email == '' }}
-      run: core.setFailed('Missing "author.email" field')
-
-    - run: |
-        echo "Checking ${{ env.pkg-name }}"
-    
+    - if: ${{ env.pkg-author-email-type != 'string' }}
+      run: core.setFailed('"author.email" must be string, not ${{ env.pkg-author-email-type }}')
+          
     - name: Check version
       id: version-check
       if: ${{ env.expected-version }}

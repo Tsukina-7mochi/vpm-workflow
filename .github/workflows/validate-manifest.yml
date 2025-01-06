@@ -35,11 +35,10 @@ jobs:
 
       - uses: ./.github/actions/validate-package-manifest
         with:
-          working-directory: ${{ matrix.path }}
+          filename: ${{ format('{0}/package.json', matrix.path) }}
           url-pattern: "https://github.com/Tsukina-7mochi/vpm-workflow/releases/download/{name}-v{version}/{name}.v{version}.zip"
 
       - uses: ./.github/actions/check-repository-includes-package
         with:
           repository: "vpm.json"
           package: "${{ matrix.path }}/package.json"
-
