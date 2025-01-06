@@ -11,6 +11,7 @@ runs:
 
   steps:
     - name: Parse manifest file
+      shell: bash
       run: |
         echo "Manifest: ${{ inputs.filename }}"
         MANIFEST="$(cat ${{ inputs.filename }} | jq -cM ".")"
@@ -28,31 +29,37 @@ runs:
         echo "packages-type=$PACKAGES_TYPE" >> $GITHUB_ENV
 
     - if: ${{ env.name-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"name" must be string, not ${{ env.name-type }}'
         exit 1
 
     - if: ${{ env.author-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"author" must be string, not ${{ env.author-type }}'
         exit 1
 
     - if: ${{ env.id-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"id" must be string, not ${{ env.id-type }}'
         exit 1
 
     - if: ${{ env.url-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"url" must be string, not ${{ env.url-type }}'
         exit 1
 
     - if: ${{ env.packages-type != 'object' }}
+      shell: bash
       run: |
         echo '::error::"packages" must be object, not ${{ env.packages-type }}'
         exit 1
 
     - name: Check package manifests
+      shell: bash
       run: |
         MANIFEST="$(cat ${{ inputs.filename }} | jq -cM ".")"
         FAILED=0

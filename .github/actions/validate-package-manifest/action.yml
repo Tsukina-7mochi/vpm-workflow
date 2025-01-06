@@ -19,6 +19,7 @@ runs:
 
   steps:
     - name: Parse manifest file
+      shell: bash
       run: |
         echo "Manifest: ${{ inputs.filename }}"
         MANIFEST="$(cat ${{ inputs.filename }})"
@@ -54,36 +55,43 @@ runs:
         echo "expected-url=$EXPECTED_URL" >> $GITHUB_ENV
 
     - if: ${{ env.pkg-name-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"name" must be string, not ${{ env.pkg-name-type }}'
         exit 1
 
     - if: ${{ env.pkg-display-name-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"displayName" must be string, not ${{ env.pkg-display-name-type }}'
         exit 1
 
     - if: ${{ env.pkg-version-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"version" must be string, not ${{ env.pkg-version-type }}'
         exit 1
 
     - if: ${{ env.pkg-url-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"url" must be string, not ${{ env.pkg-url-type }}'
         exit 1
 
     - if: ${{ env.pkg-author-name-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"author.name" must be string, not ${{ env.pkg-author-name-type }}'
         exit 1
 
     - if: ${{ env.pkg-author-email-type != 'string' }}
+      shell: bash
       run: |
         echo '::error::"author.email" must be string, not ${{ env.pkg-author-email-type }}'
         exit 1
           
     - name: Check version
+      shell: bash
       id: version-check
       if: ${{ env.expected-version }}
       run: |
@@ -92,6 +100,7 @@ runs:
         [ "${{ env.pkg-version }}" = "${{ env.expected-version }}" ] || echo "failed=1" >> $GITHUB_OUTPUT
 
     - name: Check URL
+      shell: bash
       id: url-check
       run: |
         echo "Expected: ${{ env.expected-url }}"
@@ -99,16 +108,19 @@ runs:
         [ "${{ env.pkg-url }}" = "${{ env.expected-url }}" ] || echo "failed=1" >> $GITHUB_OUTPUT
 
     - name: Version check failed
+      shell: bash
       if: ${{ always() && steps.version-check.outputs.failed }}
       run: |
         echo "::error::Manifest version incorrect: expected ${{ env.expected-version }} but got ${{ env.pkg-version }}"
         exit 1
 
     - name: URL check failed
+      shell: bash
       if: ${{ always() && steps.url-check.outputs.failed }}
       run: |
         echo "::error::Manifest URL incorrect: expected ${{ env.expected-url }} but got ${{ env.pkg-url }}"
         exit 1
 
-    - run: |
+    - shell: bash
+      run: |
         echo "Validation ${{ env.manifest-file }}: ok" 

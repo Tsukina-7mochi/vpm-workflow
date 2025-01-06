@@ -14,6 +14,7 @@ runs:
 
   steps:
     - name: Parse package manifest
+      shell: bash
       run: |
         PKG_NAME="$(cat "${{ inputs.package }}" | jq -rM ".name")"
         PKG_VERSION="$(cat "${{ inputs.package }}" | jq -rM ".version")"
@@ -25,6 +26,7 @@ runs:
         echo "pkg-version=$PKG_VERSION" >> $GITHUB_ENV
 
     - name: Check repository includes package
+      shell: bash
       run: |
         QUERY=".packages.\"${{ env.pkg-name }}\".\"${{ env.pkg-version }}\""
         EXPECTED="$(cat "${{ inputs.package }}" | jq -cM ".")"
@@ -37,5 +39,6 @@ runs:
           exit 1
         fi
 
-    - run: |
+    - shell: bash
+      run: |
         echo "Validation existence of ${{ env.pkg-name }}:${{ env.pkg-version }}: ok" 
