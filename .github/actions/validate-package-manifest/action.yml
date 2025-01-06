@@ -1,5 +1,7 @@
-name: Validate Manifest Files
-description: Validates manifest version and download url
+name: Validate Package Manifest 
+description: |
+  Checks if the package manifest contains the required fields,
+  is the specified version, and the URL matches the specified pattern.
 
 inputs:
   working-directory:
@@ -92,3 +94,6 @@ runs:
       if: ${{ always() && steps.url-check.outputs.failed }}
       run: |
         core.setFailed("Manifest URL incorrect: expected ${{ env.expected-url }} but got ${{ env.pkg-url }}")
+
+    - run: |
+        echo "Validation ${{ env.manifest-file }}: ok" 
