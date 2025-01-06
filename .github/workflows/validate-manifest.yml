@@ -4,7 +4,20 @@ on:
   push:
 
 jobs:
-  validate-manifest:
+  validate-repository:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/validate-repository-manifest
+        with:
+          filename: "vpm.json"
+
+  validate-packages:
     runs-on: ubuntu-latest
     timeout-minutes: 1
 
