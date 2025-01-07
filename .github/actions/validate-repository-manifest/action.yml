@@ -71,7 +71,7 @@ runs:
             PKGSET_TYPE="$(echo "$MANIFEST" | jq -r "$PKGSET_QUERY | type")"
 
             if [ "$PKGSET_TYPE" != "object" ]; then
-        echo "::error::package listing $PKG_NAME must be object, not $PKGSET_TYPE"
+                echo "::error::package listing $PKG_NAME must be object, not $PKGSET_TYPE"
                 FAILED=1
             fi
 
