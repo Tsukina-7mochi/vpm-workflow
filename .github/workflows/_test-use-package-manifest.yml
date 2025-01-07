@@ -1,0 +1,30 @@
+name: Test Use Package Manifest
+
+on: push
+
+jobs:
+  use-package-manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/use-package-manifest
+        id: manifest
+        with:
+          filename: ./Assets/Package1/package.json
+
+      - name: Print properties
+        run: |
+          echo "name:            ${{ steps.manifest.outputs.name }}"
+          echo "display name:    ${{ steps.manifest.outputs.display-name }}"
+          echo "version:         ${{ steps.manifest.outputs.version }}"
+          echo "author name:     ${{ steps.manifest.outputs.author-name }}"
+          echo "author email:    ${{ steps.manifest.outputs.author-email }}"
+          echo "unity:           ${{ steps.manifest.outputs.unity }}"
+          echo "description:     ${{ steps.manifest.outputs.description }}"
+          echo "vpmDependencies: ${{ steps.manifest.outputs.vpm-dependencies }}"
+          echo "url:             ${{ steps.manifest.outputs.url }}"
