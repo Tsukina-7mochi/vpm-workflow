@@ -1,0 +1,26 @@
+name: Test Use Repository Manifest
+
+on: push
+
+jobs:
+  use-repository-manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/use-repository-manifest
+        id: manifest
+        with:
+          filename: ./vpm.json
+
+      - name: Print properties
+        run: |
+          echo 'name:     ${{ steps.manifest.outputs.name }}'
+          echo 'id:       ${{ steps.manifest.outputs.id }}'
+          echo 'author:   ${{ steps.manifest.outputs.author }}'
+          echo 'url:      ${{ steps.manifest.outputs.url }}'
+          echo 'packages: ${{ steps.manifest.outputs.packages }}'

@@ -1,0 +1,42 @@
+name: Use Repository Manifest
+description: Parses repository manifest to extract repository name, etc.
+
+inputs:
+  filename:
+    required: true
+    type: string
+
+outputs:
+  author:
+    value: ${{ steps.manifest.outputs.author }}
+  id:
+    value: ${{ steps.manifest.outputs.id }}
+  name:
+    value: ${{ steps.manifest.outputs.name }}
+  packages:
+    value: ${{ steps.manifest.outputs.packages }}
+  url:
+    value: ${{ steps.manifest.outputs.url }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Parse manifest
+      id: manifest
+      shell: bash
+      run: |
+        echo "Manifest: ${{ inputs.filename }}"
+        MANIFEST="$(cat ${{ inputs.filename }})"
+
+        AUTHOR="$(echo "$MANIFEST" | jq -r '.author')"
+        ID="$(echo "$MANIFEST" | jq -r '.id')"
+        NAME="$(echo "$MANIFEST" | jq -r '.name')"
+        PACKAGES="$(echo "$MANIFEST" | jq -cM '.packages')"
+        URL="$(echo "$MANIFEST" | jq -r '.url')"
+
+        echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+        echo "id=$ID" >> $GITHUB_OUTPUT
+        echo "name=$NAME" >> $GITHUB_OUTPUT
+        echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
+        echo "url=$URL" >> $GITHUB_OUTPUT

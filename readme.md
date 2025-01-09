@@ -2,7 +2,7 @@
 
 This repository is a demonstration of workflows for [VPM (VRChat Package Manager)](https://vcc.docs.vrchat.com/vpm).
 
-## Use package manifest
+## Using package manifest
 
 [Action](./.github/actions/use-package-manifest/action.yml)
 
@@ -15,6 +15,21 @@ Parses package manifest (`package.json`) and extract package name, id, version, 
     filename: ./Assets/MyPAckage/package.json
 
 - run: echo "version: ${{ steps.manifest.outputs.version }}"
+```
+
+## Using repository manifest
+
+[Action](./.github/actions/use-repository-manifest/action.yml)
+
+Parses repository manifest and extract repository name, id, etc.
+
+```yaml
+- uses: Tsukina-7mochi/vpm-workflow/.github/actions/use-repository-manifest
+  id: manifest
+  with:
+    filename: ./vpm.json
+
+- run: echo "id: ${{ steps.manifest.outputs.id }}"
 ```
 
 ## Validating package manifest
