@@ -1,0 +1,19 @@
+name: Test Check Repository Includes Package
+
+on:
+  push:
+
+jobs:
+  check-repository-includes-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/check-repository-includes-package
+        with:
+          repository-filename: "vpm.json"
+          package-filename: "./Assets/Package1/package.json"
