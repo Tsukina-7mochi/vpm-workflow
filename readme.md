@@ -1,6 +1,6 @@
 # VPM Workflows
 
-This repository is a demostration of workflows for [VPM (VRChat Package Manager)](https://vcc.docs.vrchat.com/vpm).
+This repository is a demonstration of workflows for [VPM (VRChat Package Manager)](https://vcc.docs.vrchat.com/vpm).
 
 ## Use package manifest
 
@@ -9,7 +9,7 @@ This repository is a demostration of workflows for [VPM (VRChat Package Manager)
 Parses package manifest (`package.json`) and extract package name, id, version, etc.
 
 ```yaml
-- uses: ./.github/actions/use-package-manifest
+- uses: Tsukina-7mochi/vpm-workflow/.github/actions/use-package-manifest
   id: manifest
   with:
     filename: ./Assets/MyPAckage/package.json
@@ -54,7 +54,7 @@ This action assumes that multiple packages are managed in a monorepo and that th
 
 [Action](./.github/actions/check-repository-includes-package/action.yml)
 
-Checks if a package manifest is included in the repository manifest as the `packages.{pacakge name}.{version}`.
+Checks if a package manifest is included in the repository manifest as the `packages.{package name}.{version}`.
 
 ```yaml
 - uses: Tsukina-7mochi/vpm-workflow/.github/actions/check-repository-includes-package
