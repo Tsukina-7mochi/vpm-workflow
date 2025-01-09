@@ -13,11 +13,17 @@ runs:
   using: composite
 
   steps:
-    - name: Parse package manifest
+    - name: Get package properties
+      id: manifest
+      uses: ./.github/actions/use-package-manifest
+      with:
+        filename: ${{ inputs.package-filename }}
+
+    - name: Set environment variables
       shell: bash
       run: |
-        PKG_NAME="$(cat "${{ inputs.package-filename }}" | jq -rM ".name")"
-        PKG_VERSION="$(cat "${{ inputs.package-filename }}" | jq -rM ".version")"
+        PKG_NAME="${{ steps.manifest.outputs.name }}"
+        PKG_VERSION="${{ steps.manifest.outputs.version }}"
 
         echo "Package name   : $PKG_NAME"
         echo "Package version: $PKG_VERSION"
@@ -31,8 +37,8 @@ runs:
         QUERY=".packages.\"${{ env.pkg-name }}\".\"${{ env.pkg-version }}\""
         EXPECTED="$(cat "${{ inputs.package-filename }}" | jq -cM ".")"
         ACTUAL="$(cat "${{ inputs.repository-filename }}" | jq -cM "$QUERY")"
-        echo "$ACTUAL"
-        echo "$EXPECTED"
+        echo "actual  : $ACTUAL"
+        echo "expected: $EXPECTED"
 
         if [ "$ACTUAL" != "$EXPECTED" ]; then
           echo "::error::Package manifest does not match to the one in the repository manifest."
