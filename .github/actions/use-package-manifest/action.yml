@@ -1,0 +1,74 @@
+name: Use Package Manifest
+description: Parses package manifest (package.json) to extract package name, version, etc.
+
+inputs:
+  filename:
+    required: true
+    type: string
+
+outputs:
+  author-email:
+    value: ${{ steps.manifest.outputs.author-email }}
+  author-name:
+    value: ${{ steps.manifest.outputs.author-name }}
+  author-url:
+    value: ${{ steps.manifest.outputs.author-url }}
+  dependencies:
+    value: ${{ steps.manifest.outputs.dependencies }}
+  description:
+    value: ${{ steps.manifest.outputs.description }}
+  display-name:
+    value: ${{ steps.manifest.outputs.display-name }}
+  keywords:
+    value: ${{ steps.manifest.outputs.keywords }}
+  name:
+    value: ${{ steps.manifest.outputs.name }}
+  unity:
+    value: ${{ steps.manifest.outputs.unity }}
+  unity-release:
+    value: ${{ steps.manifest.outputs.unity-release }}
+  url:
+    value: ${{ steps.manifest.outputs.url }}
+  version:
+    value: ${{ steps.manifest.outputs.version }}
+  vpm-dependencies:
+    value: ${{ steps.manifest.outputs.vpm-dependencies }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Parse manifest
+      id: manifest
+      shell: bash
+      run: |
+        echo "Manifest: ${{ inputs.filename }}"
+        MANIFEST="$(cat ${{ inputs.filename }})"
+
+        AUTHOR_EMAIL="$(echo "$MANIFEST" | jq -r '.author.email')"
+        AUTHOR_NAME="$(echo "$MANIFEST" | jq -r '.author.name')"
+        AUTHOR_URL="$(echo "$MANIFEST" | jq -r '.author.url')"
+        DEPENDENCIES="$(echo "$MANIFEST" | jq -cM '.dependencies')"
+        DESCRIPTION="$(echo "$MANIFEST" | jq -r '.description')"
+        DISPLAY_NAME="$(echo "$MANIFEST" | jq -r '.displayName')"
+        KEYWORDS="$(echo "$MANIFEST" | jq -cM '.keywords')"
+        NAME="$(echo "$MANIFEST" | jq -r '.name')"
+        UNITY="$(echo "$MANIFEST" | jq -r '.unity')"
+        UNITY_RELEASE="$(echo "$MANIFEST" | jq -r '.unityRelease')"
+        URL="$(echo "$MANIFEST" | jq -cM '.url')"
+        VERSION="$(echo "$MANIFEST" | jq -r '.version')"
+        VPM_DEPENDENCIES="$(echo "$MANIFEST" | jq -cM '.vpmDependencies')"
+
+        echo "author-email=$AUTHOR_EMAIL" >> $GITHUB_OUTPUT
+        echo "author-name=$AUTHOR_NAME" >> $GITHUB_OUTPUT
+        echo "author-url=$AUTHOR_URL" >> $GITHUB_OUTPUT
+        echo "dependencies=$DEPENDENCIES" >> $GITHUB_OUTPUT
+        echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+        echo "display-name=$DISPLAY_NAME" >> $GITHUB_OUTPUT
+        echo "keywords=$KEYWORDS" >> $GITHUB_OUTPUT
+        echo "name=$NAME" >> $GITHUB_OUTPUT
+        echo "unity=$UNITY" >> $GITHUB_OUTPUT
+        echo "unity-release=$UNITY_RELEASE" >> $GITHUB_OUTPUT
+        echo "url=$URL" >> $GITHUB_OUTPUT
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "vpm-dependencies=$VPM_DEPENDENCIES" >> $GITHUB_OUTPUT
