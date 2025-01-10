@@ -1,4 +1,4 @@
-name: Test Use Package Manifest
+name: Run Use Package Manifest
 
 on: push
 
