@@ -1,4 +1,4 @@
-name: Test Check Repository Includes Package
+name: Run Check Repository Includes Package
 
 on:
   push:
